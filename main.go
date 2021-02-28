@@ -10,22 +10,27 @@ import (
 	"strings"
 )
 
-func renameAndMoveFiles(fileType string, outputName string, newfileName string) {
+func renameAndMoveFiles(fileType string, outputFileName string, newfileName string) {
 
-	_, err := os.Stat(outputName)
+	// Checking if output file name already exsits
+	_, err := os.Stat(outputFileName)
 
+	// If not create a file
 	if os.IsNotExist(err) {
-		errDir := os.MkdirAll(outputName, 0755)
+		errDir := os.MkdirAll(outputFileName, 0755)
 		if errDir != nil {
 			log.Fatal(err)
 		}
 
 	}
+
+	// Get the working directory
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	// Read the current directory
 	directory := "."
 	files, err := ioutil.ReadDir(directory)
 	if err != nil {
@@ -34,14 +39,14 @@ func renameAndMoveFiles(fileType string, outputName string, newfileName string) 
 
 	counter := 0
 
+	// Loop through all files in current working directory
 	for _, file := range files {
 		if strings.Contains(file.Name(), fileType) {
-			fileNameWithoutExtension := strings.Split(file.Name(), fileType)[0]
-			fmt.Println(fileNameWithoutExtension)
-
+			// fileNameWithoutExtension := strings.Split(file.Name(), fileType)[0]
+			// fmt.Println(fileNameWithoutExtension)
 			os.Rename(file.Name(), strconv.Itoa(counter)+"_"+newfileName+fileType)
 			oldFileDir := dir + "/" + strconv.Itoa(counter) + "_" + newfileName + fileType
-			finalFileDir := dir + "/" + outputName + "/" + strconv.Itoa(counter) + "_" + newfileName + fileType
+			finalFileDir := dir + "/" + outputFileName + "/" + strconv.Itoa(counter) + "_" + newfileName + fileType
 			os.Rename(oldFileDir, finalFileDir)
 
 			counter++
@@ -60,8 +65,8 @@ func main() {
 	}
 
 	flag.StringVar(&config.filetypeName, "filetype", "0000000", "Enter filetype you want to rename")
-	flag.StringVar(&config.outputFolderName, "outputFolderName", "test", "Enter file name to store renamed files")
-	flag.StringVar(&config.outputFileName, "newFileName", "renamed_default", "Rename files as this")
+	flag.StringVar(&config.outputFolderName, "outputFolderName", "output_files", "Enter file name to store renamed files")
+	flag.StringVar(&config.outputFileName, "newFileName", "renamed_file", "Rename files as this")
 	flag.Parse()
 
 	fmt.Println(config.filetypeName)
