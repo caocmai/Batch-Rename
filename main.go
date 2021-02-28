@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -15,11 +16,14 @@ func main() {
 		log.Fatal(err)
 	}
 
+	counter := 0
+
 	for _, file := range files {
 		if strings.Contains(file.Name(), ".txt") {
 			fileNameWithoutExtension := strings.Split(file.Name(), ".txt")[0]
 			fmt.Println(fileNameWithoutExtension)
-			os.Rename(file.Name(), "new.txt")
+			os.Rename(file.Name(), strconv.Itoa(counter)+"_new.txt")
+			counter++
 
 		}
 	}
