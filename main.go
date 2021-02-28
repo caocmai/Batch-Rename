@@ -10,12 +10,7 @@ import (
 	"strings"
 )
 
-func main() {
-	OUTPUTNAME := "test"
-	var typeFlag string
-	flag.StringVar(&typeFlag, "filetype", "00000", "Enter type of file do you want to rename")
-	flag.Parse()
-	fmt.Println(typeFlag)
+func renameAndMoveFiles(OUTPUTNAME string, fileType string) {
 
 	_, err := os.Stat(OUTPUTNAME)
 
@@ -40,21 +35,27 @@ func main() {
 	counter := 0
 
 	for _, file := range files {
-		fmt.Println("went into for loop")
-		if strings.Contains(file.Name(), typeFlag) {
-			fmt.Println("went into if")
-
-			fileNameWithoutExtension := strings.Split(file.Name(), typeFlag)[0]
+		if strings.Contains(file.Name(), fileType) {
+			fileNameWithoutExtension := strings.Split(file.Name(), fileType)[0]
 			fmt.Println(fileNameWithoutExtension)
 
-			os.Rename(file.Name(), strconv.Itoa(counter)+"_new"+typeFlag)
-
-			oldDir := dir + "/" + strconv.Itoa(counter) + "_new" + typeFlag
-			finalDir := dir + "/" + OUTPUTNAME + "/" + strconv.Itoa(counter) + "_new" + typeFlag
+			os.Rename(file.Name(), strconv.Itoa(counter)+"_new"+fileType)
+			oldDir := dir + "/" + strconv.Itoa(counter) + "_new" + fileType
+			finalDir := dir + "/" + OUTPUTNAME + "/" + strconv.Itoa(counter) + "_new" + fileType
 			os.Rename(oldDir, finalDir)
 
 			counter++
 
 		}
 	}
+
+}
+
+func main() {
+	OUTPUTNAME := "test"
+	var typeFlag string
+	flag.StringVar(&typeFlag, "filetype", "00000", "Enter type of file do you want to rename")
+	flag.Parse()
+
+	renameAndMoveFiles(OUTPUTNAME, typeFlag)
 }
