@@ -22,7 +22,6 @@ func createOutputFolder(outputFolderName string) {
 			log.Fatal(err)
 		}
 	}
-
 }
 
 func getFilesFromDir(inputFolder string) (files []os.FileInfo) {
@@ -51,7 +50,6 @@ func getFilesFromDir(inputFolder string) (files []os.FileInfo) {
 	}
 
 	return files
-
 }
 
 func renameAndMoveFiles(fileType string, outputFolderName string, newfileName string, inputFolder string) {
@@ -90,11 +88,10 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 
 	// Logs out how many files were renamed
 	if counter > 0 {
-		fmt.Println(counter, fileType, "was renamed")
+		fmt.Println("Renamed:", counter, fileType, "files")
 	}
 
 	getFilesFromDir(inputFolder)
-
 }
 
 func main() {
@@ -108,7 +105,7 @@ func main() {
 	}
 
 	flag.StringVar(&config.filetypeName, "filetype", "0000000", "Enter filetype you want to rename")
-	flag.StringVar(&config.outputFolderName, "output", "output_files", "Enter file name to store renamed files")
+	flag.StringVar(&config.outputFolderName, "output", "output_files", "Enter folder name to store renamed files in")
 	flag.StringVar(&config.outputFileName, "renameAs", "renamed_file", "What to call the renamed files")
 	flag.StringVar(&config.inputFolderName, "input", "", "Enter the folder of files to rename")
 	flag.Parse()
