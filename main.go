@@ -6,11 +6,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
-func renameAndMoveFiles(fileType string, outputFileName string, newfileName string) {
+func renameAndMoveFiles(fileType string, outputFileName string, newfileName string, inputFolder string) {
 
 	// Checking if output file name already exsits
 	_, err := os.Stat(outputFileName)
@@ -31,8 +32,8 @@ func renameAndMoveFiles(fileType string, outputFileName string, newfileName stri
 	}
 
 	// Read the current directory
-	directory := "."
-	files, err := ioutil.ReadDir(directory)
+	workingDir := dir + "/" + inputFolder
+	files, err := ioutil.ReadDir(workingDir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,25 +41,33 @@ func renameAndMoveFiles(fileType string, outputFileName string, newfileName stri
 	counter := 0
 
 	// Loop through all files in current working directory
+	// TODO: Maybe change this to a specfied folder within the working dir to keep it organzied
 	for _, file := range files {
+		// fmt.Println("in for loop")
 		if strings.Contains(file.Name(), fileType) {
 			// fileNameWithoutExtension := strings.Split(file.Name(), fileType)[0]
 			// fmt.Println(fileNameWithoutExtension)
-			os.Rename(file.Name(), strconv.Itoa(counter)+"_"+newfileName+fileType)
-			oldFileDir := dir + "/" + strconv.Itoa(counter) + "_" + newfileName + fileType
+
+			// Rename and move file
 			finalFileDir := dir + "/" + outputFileName + "/" + strconv.Itoa(counter) + "_" + newfileName + fileType
-			os.Rename(oldFileDir, finalFileDir)
 
+			err := os.Rename(filepath.Join(workingDir, file.Name()), finalFileDir)
+
+			if err != nil {
+				log.Fatal(err)
+			}
 			counter++
-
 		}
 	}
+
+	fmt.Println(counter, fileType, "was renamed")
 
 }
 
 func main() {
 
-	var config struct { // [1]
+	var config struct {
+		inputFolderName  string
 		filetypeName     string
 		outputFolderName string
 		outputFileName   string
@@ -66,11 +75,9 @@ func main() {
 
 	flag.StringVar(&config.filetypeName, "filetype", "0000000", "Enter filetype you want to rename")
 	flag.StringVar(&config.outputFolderName, "outputFolderName", "output_files", "Enter file name to store renamed files")
-	flag.StringVar(&config.outputFileName, "newFileName", "renamed_file", "Rename files as this")
+	flag.StringVar(&config.outputFileName, "newFileName", "renamed_file", "What to call the renamed files")
+	flag.StringVar(&config.inputFolderName, "inputFolder", "", "Enter folder of files to rename")
 	flag.Parse()
 
-	fmt.Println(config.filetypeName)
-	fmt.Println(config.outputFolderName)
-
-	renameAndMoveFiles(config.filetypeName, config.outputFolderName, config.outputFileName)
+	renameAndMoveFiles(config.filetypeName, config.outputFolderName, config.outputFileName, config.inputFolderName)
 }
