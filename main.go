@@ -19,16 +19,20 @@ func getWorkingDir() (dir string) {
 	return workingDir
 }
 
-func createOutputFolder(outputFolderName string) (fileCount int) {
+func createFolder(folderName string) {
+	errDir := os.MkdirAll(folderName, 0755)
+	if errDir != nil {
+		log.Fatal(errDir)
+	}
+}
+
+func numFilesInFolder(outputFolderName string) (fileCount int) {
 	// Checks if output file name already exsits
 	_, err := os.Stat(outputFolderName)
 
 	// If not create a file
 	if os.IsNotExist(err) {
-		errDir := os.MkdirAll(outputFolderName, 0755)
-		if errDir != nil {
-			log.Fatal(err)
-		}
+		createFolder(outputFolderName)
 	} else {
 		workingDir := getWorkingDir()
 		specifiedWorkingDir := workingDir + "/" + outputFolderName
@@ -52,7 +56,6 @@ func getFilesFromDir(specifiedWorkingDir string) (files []os.FileInfo) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return files
 }
 
@@ -66,7 +69,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 	files := getFilesFromDir(specifiedWorkingDir)
 
 	// Get the number of files in the ouput folder
-	outputFolderCount := createOutputFolder(outputFolderName)
+	outputFolderCount := numFilesInFolder(outputFolderName)
 
 	counter := 0
 
@@ -88,9 +91,9 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 		}
 	}
 
-	// Logs out how many files were renamed
+	// Log out how many files were renamed
 	if counter+outputFolderCount > outputFolderCount {
-		fmt.Println("Renamed:", counter, fileType, "files")
+		fmt.Println("Renamed:", counter, fileType, "files to ", outputFolderName)
 	}
 
 	deleteEmptyFolder(specifiedWorkingDir, getFilesFromDir(inputFolder))

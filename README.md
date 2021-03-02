@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/caocmai/Make-Utility)](https://goreportcard.com/report/github.com/caocmai/Make-Utility)
+
 # Make Utility
 
 
