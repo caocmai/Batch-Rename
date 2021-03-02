@@ -11,6 +11,14 @@ import (
 	"strings"
 )
 
+func getWorkingDir() (dir string) {
+	workingDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return workingDir
+}
+
 func createOutputFolder(outputFolderName string) (fileCount int) {
 	// Checks if output file name already exsits
 	_, err := os.Stat(outputFolderName)
@@ -22,27 +30,26 @@ func createOutputFolder(outputFolderName string) (fileCount int) {
 			log.Fatal(err)
 		}
 	} else {
-		workingDir, err := os.Getwd()
+		workingDir := getWorkingDir()
+		specifiedWorkingDir := workingDir + "/" + outputFolderName
+		files, err := ioutil.ReadDir(specifiedWorkingDir)
+		// Return the number of files in output folder
 		if err != nil {
 			log.Fatal(err)
 		}
-		specifiedWorkingDir := workingDir + "/" + outputFolderName
-		files, err := ioutil.ReadDir(specifiedWorkingDir)
 		return len(files)
 	}
+	// Or return 0, meaning folder is empty
 	return 0
 }
 
 func getFilesFromDir(inputFolder string) (files []os.FileInfo) {
 	// Get the current working directory
-	workingDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
+	workingDir := getWorkingDir()
 
 	// Read the current working directory + inputFolder name for files
 	specifiedWorkingDir := workingDir + "/" + inputFolder
-	files, err = ioutil.ReadDir(specifiedWorkingDir)
+	files, err := ioutil.ReadDir(specifiedWorkingDir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,16 +71,14 @@ func getFilesFromDir(inputFolder string) (files []os.FileInfo) {
 func renameAndMoveFiles(fileType string, outputFolderName string, newfileName string, inputFolder string) {
 
 	// Get the current working directory
-	workingDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
+	workingDir := getWorkingDir()
 
 	// Read the current working directory + inputFolder name for files
 	specifiedWorkingDir := workingDir + "/" + inputFolder
 	files := getFilesFromDir(inputFolder)
 
-	beginningCount := createOutputFolder(outputFolderName)
+	// Get the number of files in the ouput folder
+	outputFolderCount := createOutputFolder(outputFolderName)
 
 	counter := 0
 
@@ -84,7 +89,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 			// fmt.Println(fileNameWithoutExtension)
 
 			// Rename and move file
-			finalFileDir := workingDir + "/" + outputFolderName + "/" + strconv.Itoa(counter+beginningCount) + "_" + newfileName + fileType
+			finalFileDir := workingDir + "/" + outputFolderName + "/" + strconv.Itoa(counter+outputFolderCount) + "_" + newfileName + fileType
 
 			err := os.Rename(filepath.Join(specifiedWorkingDir, file.Name()), finalFileDir)
 
@@ -96,7 +101,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 	}
 
 	// Logs out how many files were renamed
-	if counter+beginningCount > beginningCount {
+	if counter+outputFolderCount > outputFolderCount {
 		fmt.Println("Renamed:", counter, fileType, "files")
 	}
 
