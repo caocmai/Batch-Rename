@@ -32,37 +32,25 @@ func createOutputFolder(outputFolderName string) (fileCount int) {
 	} else {
 		workingDir := getWorkingDir()
 		specifiedWorkingDir := workingDir + "/" + outputFolderName
-		files, err := ioutil.ReadDir(specifiedWorkingDir)
-		// Return the number of files in output folder
-		if err != nil {
-			log.Fatal(err)
-		}
+		files := getFilesFromDir(specifiedWorkingDir)
 		return len(files)
 	}
 	// Or return 0, meaning folder is empty
 	return 0
 }
 
-func getFilesFromDir(inputFolder string) (files []os.FileInfo) {
-	// Get the current working directory
-	workingDir := getWorkingDir()
+func deleteEmptyFolder(dir string, files []os.FileInfo) {
+	// Delete folder if is empty
+	if len(files) == 0 {
+		os.Remove(dir)
+	}
+}
 
-	// Read the current working directory + inputFolder name for files
-	specifiedWorkingDir := workingDir + "/" + inputFolder
+func getFilesFromDir(specifiedWorkingDir string) (files []os.FileInfo) {
+	// Get files from dir
 	files, err := ioutil.ReadDir(specifiedWorkingDir)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	isEmpty := false
-
-	if len(files) == 0 {
-		isEmpty = true
-	}
-
-	// If there are no files in folder then delete that folder
-	if isEmpty {
-		os.Remove(specifiedWorkingDir)
 	}
 
 	return files
@@ -75,7 +63,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 
 	// Read the current working directory + inputFolder name for files
 	specifiedWorkingDir := workingDir + "/" + inputFolder
-	files := getFilesFromDir(inputFolder)
+	files := getFilesFromDir(specifiedWorkingDir)
 
 	// Get the number of files in the ouput folder
 	outputFolderCount := createOutputFolder(outputFolderName)
@@ -105,7 +93,8 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 		fmt.Println("Renamed:", counter, fileType, "files")
 	}
 
-	getFilesFromDir(inputFolder)
+	deleteEmptyFolder(specifiedWorkingDir, getFilesFromDir(inputFolder))
+
 }
 
 func main() {
