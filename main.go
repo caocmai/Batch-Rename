@@ -112,7 +112,7 @@ func main() {
 
 	flag.StringVar(&config.filetypeName, "filetype", "0000000", "Enter filetype you want to rename")
 	flag.StringVar(&config.outputFolderName, "outputFolder", "output_files", "Enter folder name to store renamed files in")
-	flag.StringVar(&config.outputFileName, "renameAs", "renamed_file", "What to call the renamed files")
+	flag.StringVar(&config.outputFileName, "renameFileAs", "renamed_file", "What to call the renamed files")
 	flag.StringVar(&config.inputFolderName, "inputFolder", "", "Enter the folder of files to rename")
 	flag.Parse()
 
