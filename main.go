@@ -80,7 +80,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 			// fmt.Println(fileNameWithoutExtension)
 
 			// Rename and move file
-			finalFileDir := workingDir + "/" + outputFolderName + "/" + strconv.Itoa(counter+outputFolderCount) + "_" + newfileName + fileType
+			finalFileDir := workingDir + "/" + outputFolderName + "/" + newfileName + "_" + strconv.Itoa(counter+outputFolderCount) + fileType
 
 			err := os.Rename(filepath.Join(specifiedWorkingDir, file.Name()), finalFileDir)
 
@@ -91,7 +91,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 		}
 	}
 
-	// Log out how many files were renamed
+	// Log out how many files were renamed, if any
 	if counter+outputFolderCount > outputFolderCount {
 		fmt.Println("Renamed:", counter, fileType, "files to ", outputFolderName)
 	}
