@@ -21,8 +21,11 @@ A list of all the flags and their usage for this project
 
 ##### Flag Explanation
 `filetype` - the program will look for files of this file type
-`inputFolder` - the program will look for folder with this name. NOTE: folder must be at root of project
+
+`inputFolder` - the program will look for folder with this name. NOTE: folder must be at root of project. If one is not provided then program will look for the files at the root of project
+
 `outputFolder` - the program will store all renamed files into this folder
+
 `renameFileAs` - the renamed files will start with this string
 
 
