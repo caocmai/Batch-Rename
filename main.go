@@ -88,6 +88,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 		if strings.Contains(file.Name(), fileType) {
 			// fileNameWithoutExtension := strings.Split(file.Name(), fileType)[0]
 			// fmt.Println(fileNameWithoutExtension)
+			counter++
 
 			// Rename and move file
 			finalFileDir := workingDir + "/" + outputFolderName + "/" + newfileName + "_" + strconv.Itoa(counter+outputFolderCount) + fileType
@@ -98,7 +99,6 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 				log.Fatal(err)
 				logError()
 			}
-			counter++
 		}
 	}
 

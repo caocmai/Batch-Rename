@@ -45,3 +45,7 @@ In terminal run:
 ## Note
 This project has only been tested on a Mac machine.
 
+
+## Additional Resources
+* [Slides](https://docs.google.com/presentation/d/1sP2tj-79a7mOlrleGvi6uO9PA4OiH0oCYyGa7Zy0t9A/edit?usp=sharing)
+* [Project WriteUp]()
