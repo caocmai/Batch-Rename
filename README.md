@@ -27,15 +27,15 @@ A list of all the flags and their usage for this project
 
 
 ### Example Usage
-Case 1: If you want to rename all `.jpg` files in a folder called `pictures`.
+**Case 1:** If you want to rename all `.jpg` files in a folder called `pictures`.
 
 In terminal run:
 
 `$ go run main.go -filetype=.jpg -inputFolder=pictures`
 
-You can use other flags to customize renaming of files, if not they will take the default values, shown in the **Flags Table** below.
+You can use other flags to customize renaming of files, if not they will take the default values, shown in the **Flags Table** above.
 
-Case 2: If you want to rename all `.jpg` files in a folder called `pictures` to something that starts with `Vacation_2021_XX` and saved all the renamed files into a folder called `Vacation2021`.
+**Case 2:** If you want to rename all `.jpg` files in a folder called `pictures` to something that starts with `Vacation_2021_XX` and save all the renamed files into a folder called `Vacation2021`.
 
 In terminal run:
 

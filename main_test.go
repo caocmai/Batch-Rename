@@ -16,8 +16,8 @@ func TestTableFolderSizes(t *testing.T) {
 		name           string
 		expectedLength int
 	}{
-		{"output_files", 2},
-		{"folder3", 3},
+		{"folder3", 2},
+		{"folder4", 1},
 	}
 
 	for _, eachFolderTest := range foldersTest {

@@ -4,17 +4,23 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
+
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	// Using this 3rd party package to log out errors and save it to ErrorLog.log file
+	"github.com/sirupsen/logrus"
 )
+
+var log = logrus.New()
 
 func getWorkingDir() (dir string) {
 	workingDir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
+		logError()
 	}
 	return workingDir
 }
@@ -23,6 +29,7 @@ func createFolder(folderName string) {
 	errDir := os.MkdirAll(folderName, 0755)
 	if errDir != nil {
 		log.Fatal(errDir)
+		logError()
 	}
 }
 
@@ -53,8 +60,11 @@ func deleteEmptyFolder(dir string, files []os.FileInfo) {
 func getFilesFromDir(specifiedWorkingDir string) (files []os.FileInfo) {
 	// Get files from dir
 	files, err := ioutil.ReadDir(specifiedWorkingDir)
+
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		log.Println(err)
+		logError()
 	}
 	return files
 }
@@ -86,6 +96,7 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 
 			if err != nil {
 				log.Fatal(err)
+				logError()
 			}
 			counter++
 		}
@@ -93,14 +104,29 @@ func renameAndMoveFiles(fileType string, outputFolderName string, newfileName st
 
 	// Log out how many files were renamed, if any
 	if counter+outputFolderCount > outputFolderCount {
-		fmt.Println("Renamed:", counter, fileType, "files to ", outputFolderName)
+		fmt.Println("Renamed:", counter, fileType, "files to ", outputFolderName, "as", newfileName)
 	}
 
 	deleteEmptyFolder(specifiedWorkingDir, getFilesFromDir(inputFolder))
 
 }
 
+// This saves error to a file called "ErrorLog.log", so user can dedug what went wrong
+func logError() {
+	log.Out = os.Stdout
+
+	// Opens ErrorLog if exists if not create it
+	file, err := os.OpenFile("ErrorLog.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err == nil {
+		log.Out = file
+	} else {
+		log.Info("Failed to log to file, using default stderr")
+	}
+}
+
 func main() {
+	// Set error log as JSON format
+	log.SetFormatter(&logrus.JSONFormatter{})
 
 	// config stuct to store flags
 	var config struct {
@@ -117,4 +143,5 @@ func main() {
 	flag.Parse()
 
 	renameAndMoveFiles(config.filetypeName, config.outputFolderName, config.outputFileName, config.inputFolderName)
+
 }
