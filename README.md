@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/caocmai/Make-Utility)](https://goreportcard.com/report/github.com/caocmai/Make-Utility)
 
-# Make Utility
+# Batch Rename
 This Go program renames all files of specified file type and stores them into a new folder.
 
 ## Prerequisites
